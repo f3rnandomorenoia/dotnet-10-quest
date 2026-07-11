@@ -1,0 +1,10 @@
+{
+  "name": ".NET 10 Quest",
+  "short_name": ".NET Quest",
+  "description": "Juego táctil móvil para aprender .NET 10 desde cero hasta experto.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#101827",
+  "theme_color": "#101827",
+  "icons": []
+}

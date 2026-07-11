@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#101827">
+    <meta name="description" content="Juego táctil móvil para aprender .NET 10 desde cero hasta nivel experto.">
+    <title>.NET 10 Quest</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell" aria-live="polite">
+      <header class="topbar">
+        <div class="brand-lockup" aria-label=".NET 10 Quest">
+          <span class="brand-mark">.NET</span>
+          <div>
+            <p class="eyebrow">Juego táctil móvil</p>
+            <h1>.NET 10 Quest</h1>
+          </div>
+        </div>
+        <button class="icon-button" id="resetButton" type="button" aria-label="Reiniciar progreso">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 8a8 8 0 1 1 2.34 5.66" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </header>
+
+      <section class="score-strip" aria-label="Progreso del jugador">
+        <div class="score-item">
+          <span class="score-label">XP</span>
+          <strong id="xpValue">0</strong>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Racha</span>
+          <strong id="streakValue">0</strong>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Misiones</span>
+          <strong id="missionValue">0/0</strong>
+        </div>
+      </section>
+
+      <section class="progress-panel" aria-label="Rango actual">
+        <div>
+          <p class="eyebrow">Rango</p>
+          <h2 id="rankTitle">Cargando</h2>
+        </div>
+        <div class="progress-meter" aria-hidden="true">
+          <span id="progressFill"></span>
+        </div>
+      </section>
+
+      <section class="game-board" id="routePanel">
+        <div class="board-visual">
+          <img class="arena-art" src="assets/dotnet-rig.svg" alt="" aria-hidden="true">
+          <div class="board-copy">
+            <p class="eyebrow">Ruta 0 a experto</p>
+            <h2>Conquista el stack .NET 10</h2>
+            <p>CLI, C# 14, ASP.NET Core, EF Core, testing, rendimiento y despliegue.</p>
+          </div>
+        </div>
+        <div class="mission-track" id="missionTrack" aria-label="Mapa de misiones"></div>
+      </section>
+
+      <section class="challenge-panel" id="challengePanel" aria-label="Reto actual">
+        <div class="challenge-head">
+          <div>
+            <p class="eyebrow" id="missionArea">Área</p>
+            <h2 id="missionTitle">Reto</h2>
+          </div>
+          <span class="kind-pill" id="missionKind">Tap</span>
+        </div>
+
+        <p class="prompt" id="missionPrompt"></p>
+        <pre class="code-window" id="missionCode" hidden><code></code></pre>
+
+        <div class="answer-zone" id="answerZone"></div>
+        <div class="order-tray" id="orderTray" hidden>
+          <span>Secuencia:</span>
+          <div id="orderSequence"></div>
+        </div>
+
+        <div class="challenge-actions">
+          <button class="secondary-button" id="clearButton" type="button" hidden>Borrar</button>
+          <button class="primary-button" id="submitButton" type="button">Comprobar</button>
+        </div>
+
+        <div class="feedback" id="feedbackBox" hidden></div>
+      </section>
+
+      <section class="sources-panel" id="sourcesPanel" aria-label="Fuentes oficiales">
+        <div class="section-title">
+          <p class="eyebrow">Fuentes oficiales</p>
+          <h2>Contenido revisado con Microsoft Learn</h2>
+        </div>
+        <ul id="sourcesList"></ul>
+      </section>
+
+      <nav class="bottom-nav" aria-label="Navegación principal">
+        <button class="nav-button is-active" type="button" data-tab="routePanel" aria-label="Ver ruta">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 19c3-5 5-5 8-2s6 3 8-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="5" cy="6" r="2" fill="currentColor"/>
+            <circle cx="12" cy="12" r="2" fill="currentColor"/>
+            <circle cx="19" cy="6" r="2" fill="currentColor"/>
+          </svg>
+          <span>Ruta</span>
+        </button>
+        <button class="nav-button" type="button" data-tab="challengePanel" aria-label="Ver reto">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 4h8l4 4v8l-4 4H8l-4-4V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M9 12h6M12 9v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>Reto</span>
+        </button>
+        <button class="nav-button" type="button" data-tab="sourcesPanel" aria-label="Ver fuentes">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 4h10a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 8h7M8 12h8M8 16h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>Fuentes</span>
+        </button>
+      </nav>
+    </main>
+
+    <script src="content.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

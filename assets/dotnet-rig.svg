@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img" aria-label=".NET 10 learning rig">
+  <defs>
+    <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#14223a"/>
+      <stop offset="0.55" stop-color="#18283d"/>
+      <stop offset="1" stop-color="#0c1626"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" x2="1">
+      <stop offset="0" stop-color="#55a6ff"/>
+      <stop offset="0.5" stop-color="#54d18a"/>
+      <stop offset="1" stop-color="#f5bd48"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" values="0 0 0 0 0.34 0 0 0 0 0.68 0 0 0 0 1 0 0 0 0.35 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="960" height="420" fill="url(#sky)"/>
+  <path d="M0 330 C170 292 270 360 426 320 C595 277 700 304 960 250 L960 420 L0 420 Z" fill="#0a1322"/>
+  <path d="M120 270 C260 188 365 226 482 164 C620 91 776 126 870 72" fill="none" stroke="url(#panel)" stroke-width="9" stroke-linecap="round" filter="url(#glow)"/>
+  <g fill="#101827" stroke="#56d7df" stroke-width="3">
+    <rect x="102" y="238" width="104" height="70" rx="8"/>
+    <rect x="306" y="196" width="118" height="78" rx="8"/>
+    <rect x="520" y="124" width="124" height="86" rx="8"/>
+    <rect x="744" y="70" width="118" height="76" rx="8"/>
+  </g>
+  <g fill="#eaf6ff" font-family="ui-sans-serif, system-ui, Segoe UI, sans-serif" font-weight="800">
+    <text x="126" y="279" font-size="30">CLI</text>
+    <text x="326" y="242" font-size="30">C# 14</text>
+    <text x="542" y="174" font-size="30">API</text>
+    <text x="764" y="118" font-size="30">EF10</text>
+  </g>
+  <g stroke="#55a6ff" stroke-width="2" opacity="0.45">
+    <path d="M32 82H196M32 118H132M742 300H920M760 334H870M410 52H560"/>
+    <path d="M194 82l28 28h72M132 118l40 42h84M560 52l38 44h122M742 300l-40-36h-98"/>
+  </g>
+  <g fill="#54d18a">
+    <circle cx="224" cy="110" r="6"/>
+    <circle cx="294" cy="110" r="6"/>
+    <circle cx="256" cy="160" r="6"/>
+    <circle cx="598" cy="96" r="6"/>
+    <circle cx="720" cy="96" r="6"/>
+    <circle cx="604" cy="264" r="6"/>
+    <circle cx="702" cy="264" r="6"/>
+  </g>
+  <g transform="translate(420 250)">
+    <path d="M30 0h88a30 30 0 0 1 30 30v14a30 30 0 0 1-30 30H30A30 30 0 0 1 0 44V30A30 30 0 0 1 30 0Z" fill="#5d3fd3" stroke="#b9a8ff" stroke-width="4"/>
+    <text x="74" y="48" text-anchor="middle" fill="#fff" font-family="ui-sans-serif, system-ui, Segoe UI, sans-serif" font-size="32" font-weight="900">.NET</text>
+  </g>
+</svg>
