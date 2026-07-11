@@ -115,7 +115,7 @@ try {
   if (localServer) {
     await new Promise((resolve) => localServer.close(resolve));
   }
-  await fs.rm(profileDir, { recursive: true, force: true });
+  await removeProfileDir(profileDir);
 }
 
 function assert(condition, message) {
@@ -137,6 +137,21 @@ function waitForExit(childProcess) {
     childProcess.once("exit", resolve);
     setTimeout(resolve, 1500);
   });
+}
+
+async function removeProfileDir(dir) {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    try {
+      await fs.rm(dir, { recursive: true, force: true });
+      return;
+    } catch (error) {
+      if (attempt === 4) {
+        console.warn(`Could not remove temporary Chrome profile: ${error.message}`);
+        return;
+      }
+      await delay(250);
+    }
+  }
 }
 
 async function waitForTab(cdpPort) {
