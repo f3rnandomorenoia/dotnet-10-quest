@@ -4,7 +4,8 @@ import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
 
-const url = process.env.SMOKE_URL || "http://127.0.0.1:4173/";
+const localServer = process.env.SMOKE_URL ? null : await startStaticServer();
+const url = process.env.SMOKE_URL || `http://127.0.0.1:${localServer.address().port}/`;
 const chrome = process.env.CHROME_BIN || "/usr/bin/google-chrome-stable";
 const port = Number(process.env.CDP_PORT || 9228);
 const profileDir = await fs.mkdtemp(path.join(os.tmpdir(), "dotnet-quest-chrome-"));
@@ -111,6 +112,9 @@ try {
 } finally {
   child.kill("SIGTERM");
   await waitForExit(child);
+  if (localServer) {
+    await new Promise((resolve) => localServer.close(resolve));
+  }
   await fs.rm(profileDir, { recursive: true, force: true });
 }
 
@@ -167,6 +171,50 @@ function getJson(targetUrl) {
         }
       });
     }).on("error", reject);
+  });
+}
+
+function startStaticServer() {
+  const root = process.cwd();
+  const mimeTypes = new Map([
+    [".css", "text/css; charset=utf-8"],
+    [".html", "text/html; charset=utf-8"],
+    [".js", "text/javascript; charset=utf-8"],
+    [".json", "application/json; charset=utf-8"],
+    [".svg", "image/svg+xml; charset=utf-8"],
+    [".webmanifest", "application/manifest+json; charset=utf-8"]
+  ]);
+
+  const server = http.createServer(async (request, response) => {
+    try {
+      const requestUrl = new URL(request.url || "/", "http://localhost");
+      const pathname = decodeURIComponent(requestUrl.pathname);
+      const relativePath = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
+      const filePath = path.resolve(root, relativePath);
+
+      if (filePath !== root && !filePath.startsWith(`${root}${path.sep}`)) {
+        response.writeHead(403);
+        response.end("Forbidden");
+        return;
+      }
+
+      const body = await fs.readFile(filePath);
+      response.writeHead(200, {
+        "content-type": mimeTypes.get(path.extname(filePath)) || "application/octet-stream"
+      });
+      response.end(body);
+    } catch {
+      response.writeHead(404);
+      response.end("Not found");
+    }
+  });
+
+  return new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      server.off("error", reject);
+      resolve(server);
+    });
   });
 }
 
