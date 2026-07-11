@@ -451,11 +451,8 @@ button {
   margin-top: 14px;
 }
 
+#clearButton[hidden] ~ .primary-button:not([hidden]),
 .challenge-actions .primary-button:only-child {
-  grid-column: 1 / -1;
-}
-
-#clearButton[hidden] + .primary-button {
   grid-column: 1 / -1;
 }
 

@@ -31,6 +31,7 @@
     orderSequence: document.getElementById("orderSequence"),
     clearButton: document.getElementById("clearButton"),
     submitButton: document.getElementById("submitButton"),
+    nextButton: document.getElementById("nextButton"),
     feedbackBox: document.getElementById("feedbackBox"),
     resetButton: document.getElementById("resetButton"),
     sourcesList: document.getElementById("sourcesList")
@@ -208,10 +209,20 @@
       els.missionCode.hidden = true;
     }
 
-    els.clearButton.hidden = mission.kind === "choice";
+    renderChallengeActions(mission);
     els.orderTray.hidden = mission.kind !== "order";
     renderAnswers(mission);
     renderFeedback(mission);
+  }
+
+  function renderChallengeActions(mission) {
+    const answeredCorrectly = Boolean(transient.lastResult?.ok);
+    const canMoveForward = state.current < missions.length - 1 && state.current < state.unlocked;
+
+    els.clearButton.hidden = mission.kind === "choice" || answeredCorrectly;
+    els.submitButton.hidden = answeredCorrectly;
+    els.nextButton.hidden = !answeredCorrectly;
+    els.nextButton.textContent = canMoveForward ? "Siguiente" : "Ver ruta";
   }
 
   function kindLabel(kind) {
@@ -231,6 +242,7 @@
       button.className = "answer-button";
       button.dataset.index = String(index);
       button.innerHTML = `<span>${escapeHtml(option)}</span>`;
+      button.disabled = Boolean(transient.lastResult?.ok);
 
       if (mission.kind === "choice" && transient.selectedChoice === index) {
         button.classList.add("is-selected");
@@ -417,6 +429,17 @@
     renderChallenge();
   }
 
+  function goNext() {
+    if (state.current < missions.length - 1 && state.current < state.unlocked) {
+      setCurrent(state.current + 1);
+      return;
+    }
+
+    resetTransient();
+    render();
+    showTab("routePanel");
+  }
+
   function resetGame() {
     const confirmed = window.confirm("¿Reiniciar todo el progreso de .NET 10 Quest?");
     if (!confirmed) {
@@ -469,6 +492,7 @@
 
   function bindEvents() {
     els.submitButton.addEventListener("click", submitAnswer);
+    els.nextButton.addEventListener("click", goNext);
     els.clearButton.addEventListener("click", clearAnswer);
     els.resetButton.addEventListener("click", resetGame);
 

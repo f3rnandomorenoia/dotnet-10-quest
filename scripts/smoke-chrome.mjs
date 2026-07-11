@@ -72,7 +72,11 @@ try {
     xp: document.querySelector("#xpValue")?.textContent || "",
     secondStatus: document.querySelectorAll(".mission-node")[1]?.dataset.status || "",
     orderTrayDisplay: getComputedStyle(document.querySelector("#orderTray")).display,
-    submitWidth: document.querySelector("#submitButton").getBoundingClientRect().width,
+    submitHidden: document.querySelector("#submitButton").hidden,
+    nextHidden: document.querySelector("#nextButton").hidden,
+    nextText: document.querySelector("#nextButton").textContent,
+    nextWidth: document.querySelector("#nextButton").getBoundingClientRect().width,
+    selectedDisabled: document.querySelector('.answer-button[data-index="1"]').disabled,
     panelWidth: document.querySelector("#challengePanel").getBoundingClientRect().width,
     overflow: document.documentElement.scrollWidth - window.innerWidth
   }));
@@ -81,8 +85,33 @@ try {
   assert(answered.xp === "40", `expected 40 XP, got ${answered.xp}`);
   assert(answered.secondStatus === "open", `second mission should unlock, got ${answered.secondStatus}`);
   assert(answered.orderTrayDisplay === "none", "order tray should stay hidden on choice missions");
-  assert(answered.submitWidth > answered.panelWidth * 0.82, "submit button should span the action row");
+  assert(answered.submitHidden, "submit button should hide after a correct answer");
+  assert(!answered.nextHidden, "next button should appear after a correct answer");
+  assert(answered.nextText === "Siguiente", `expected next label, got ${answered.nextText}`);
+  assert(answered.nextWidth > answered.panelWidth * 0.82, "next button should span the action row");
+  assert(answered.selectedDisabled, "answered options should lock after a correct answer");
   assert(answered.overflow <= 1, `mobile overflow after answer ${answered.overflow}px`);
+
+  await evaluate(cdp, () => {
+    document.querySelector("#nextButton").click();
+  });
+  await delay(150);
+
+  const nextMission = await evaluate(cdp, () => ({
+    title: document.querySelector("#missionTitle").textContent,
+    currentStatus: document.querySelectorAll(".mission-node")[1]?.dataset.status || "",
+    feedbackHidden: document.querySelector("#feedbackBox").hidden,
+    submitHidden: document.querySelector("#submitButton").hidden,
+    nextHidden: document.querySelector("#nextButton").hidden,
+    overflow: document.documentElement.scrollWidth - window.innerWidth
+  }));
+
+  assert(nextMission.title === "SDK o runtime", `expected second mission, got ${nextMission.title}`);
+  assert(nextMission.currentStatus === "current", `second mission should be current, got ${nextMission.currentStatus}`);
+  assert(nextMission.feedbackHidden, "feedback should reset on the next mission");
+  assert(!nextMission.submitHidden, "submit button should return on the next mission");
+  assert(nextMission.nextHidden, "next button should hide on the next unanswered mission");
+  assert(nextMission.overflow <= 1, `mobile overflow after next ${nextMission.overflow}px`);
 
   await capture(cdp, path.join(screenshotDir, "smoke-mobile.png"));
 
